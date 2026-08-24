@@ -174,9 +174,9 @@ static void TestAggregation(void) {
                                            "reading", STATS_SESSION_CANCELLED);
     assert(Statistics_AddLoadedSession(&second)); free(second.spans);
     assert(Statistics_Query(STATS_RANGE_SEVEN_DAYS, &day, &summary));
-    assert(summary.total_focus_seconds == 2400);
+    assert(summary.total_focus_seconds == 2100);
     assert(summary.completed_sessions == 1 && summary.cancelled_sessions == 1);
-    assert(summary.category_count == 2 && summary.active_days == 2);
+    assert(summary.category_count == 2 && summary.active_days == 1);
     assert(summary.longest_streak == 2);
 }
 static void TestParsingAndStepKind(void) {

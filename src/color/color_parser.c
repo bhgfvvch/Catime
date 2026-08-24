@@ -70,12 +70,21 @@ static BOOL ParseHexColor(const char* hex, char* output, size_t size) {
     /* #RGB -> #RRGGBB */
     if (len == 3 && strspn(ptr, HEX_DIGITS) == 3) {
         snprintf(output, size, "#%c%c%c%c%c%c",
-                ptr[0], ptr[0], ptr[1], ptr[1], ptr[2], ptr[2]);
+                (char)toupper((unsigned char)ptr[0]),
+                (char)toupper((unsigned char)ptr[0]),
+                (char)toupper((unsigned char)ptr[1]),
+                (char)toupper((unsigned char)ptr[1]),
+                (char)toupper((unsigned char)ptr[2]),
+                (char)toupper((unsigned char)ptr[2]));
         return TRUE;
     }
 
     if (len == HEX_DIGITS_LENGTH && strspn(ptr, HEX_DIGITS) == HEX_DIGITS_LENGTH) {
-        snprintf(output, size, "#%s", ptr);
+        for (size_t i = 0; i < HEX_DIGITS_LENGTH; ++i) {
+            output[i + 1] = (char)toupper((unsigned char)ptr[i]);
+        }
+        output[0] = '#';
+        output[HEX_DIGITS_LENGTH + 1] = '\0';
         return TRUE;
     }
 
