@@ -4,6 +4,7 @@
  */
 
 #include "timer_events_internal.h"
+#include "statistics/statistics.h"
 
 BOOL TimerEvents_ShouldRenderMainTimer(void) {
     g_visibleTimerCurrentText[0] = L'\0';
@@ -109,6 +110,7 @@ static BOOL HandleMainTimer(HWND hwnd) {
     }
 
     if (CLOCK_IS_PAUSED) {
+        Statistics_UpdateRuntimeExport(FALSE);
         s_hasLastActiveRenderCheckSecond = FALSE;
         if (TimerEvents_ShouldRenderMainTimer()) {
             TimerEvents_RequestWindowRepaint(hwnd);
@@ -160,6 +162,8 @@ static BOOL HandleMainTimer(HWND hwnd) {
         TimerEvents_ShouldRenderMainTimer()) {
         TimerEvents_RequestWindowRepaint(hwnd);
     }
+
+    Statistics_UpdateRuntimeExport(FALSE);
 
     return TRUE;
 }

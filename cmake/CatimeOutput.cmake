@@ -18,6 +18,9 @@ target_link_libraries(catime PRIVATE
     propsys
     crypt32
 )
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+    target_link_libraries(catime PRIVATE m)
+endif()
 
 if(DEFINED CATIME_OUTPUT_DIR)
     set(OUTPUT_DIR ${CATIME_OUTPUT_DIR})

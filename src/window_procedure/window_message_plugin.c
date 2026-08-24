@@ -18,11 +18,13 @@
 #include "timer/main_timer.h"
 #include "window.h"
 #include "window/window_visual_effects.h"
+#include "statistics/statistics.h"
 #include <stdlib.h>
 
 static LONG g_pluginSecurityOperationSerial = 0;
 
 static void ApplyStartedPluginWindowState(HWND hwnd) {
+    Statistics_OnFocusStepCancelled();
     StopNotificationSound();
     countdown_message_shown = true;
     CLOCK_SHOW_CURRENT_TIME = false;
@@ -122,6 +124,8 @@ LRESULT HandleDialogPluginSecurity(HWND hwnd, WPARAM wp, LPARAM lp) {
     }
 
     /* User confirmed - now change state while the worker verifies and starts. */
+
+    Statistics_OnFocusStepCancelled();
 
     /* Stop notification sound */
     StopNotificationSound();

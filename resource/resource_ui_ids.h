@@ -23,6 +23,12 @@
 #define CLOCK_IDM_POMODORO_RESET 186     /**< Reset Pomodoro timer */
 #define CLOCK_IDM_POMODORO_COMBINATION 188 /**< Pomodoro combination settings */
 
+/** @brief Focus statistics and category menu identifiers */
+#define CLOCK_IDM_STATISTICS 5200
+#define CLOCK_IDM_CATEGORY_MANAGE 5201
+#define CLOCK_IDM_CATEGORY_BASE 5220
+#define CLOCK_IDM_CATEGORY_END 5251
+
 /** @brief Pomodoro dialog identifiers */
 #define CLOCK_IDD_POMODORO_TIME_DIALOG 510  /**< Pomodoro time configuration dialog */
 #define CLOCK_IDD_POMODORO_LOOP_DIALOG 513  /**< Pomodoro loop configuration dialog */

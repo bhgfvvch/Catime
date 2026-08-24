@@ -29,6 +29,7 @@
 #include "markdown/markdown_interactive.h"
 #include "drag_scale.h" // Added this line
 #include "preview_display.h"
+#include "statistics/statistics.h"
 extern UINT WM_TASKBARCREATED;
 void ToggleShowTimeMode(HWND hwnd) {
     CleanupBeforeTimerAction(hwnd);
@@ -85,6 +86,12 @@ void StartPomodoroTimer(HWND hwnd) {
     ResetTimer();
     MainTimer_Stop();
     ResetTimerWithInterval(hwnd);
+    if (Pomodoro_GetStepKind(current_pomodoro_time_index) ==
+        POMODORO_STEP_FOCUS) {
+        Statistics_OnFocusStepStarted(CLOCK_TOTAL_TIME,
+                                      complete_pomodoro_cycles + 1,
+                                      current_pomodoro_time_index + 1);
+    }
     InvalidateRect(hwnd, NULL, TRUE);
 }
 void ToggleEditMode(HWND hwnd) {
@@ -112,6 +119,13 @@ void RestartCurrentTimer(HWND hwnd) {
         ResetTimer();
         MainTimer_Stop();
         ResetTimerWithInterval(hwnd);
+        if (TimerEvents_IsActivePomodoroTimer() &&
+            Pomodoro_GetStepKind(current_pomodoro_time_index) ==
+                POMODORO_STEP_FOCUS) {
+            Statistics_OnFocusStepStarted(CLOCK_TOTAL_TIME,
+                                          complete_pomodoro_cycles + 1,
+                                          current_pomodoro_time_index + 1);
+        }
         InvalidateRect(hwnd, NULL, TRUE);
     }
     HandleWindowReset(hwnd);
@@ -130,6 +144,7 @@ void StartQuickCountdownByIndex(HWND hwnd, int index) {
     }
 }
 void CleanupBeforeTimerAction(HWND hwnd) {
+    Statistics_OnFocusStepCancelled();
     RestoreWindowVisibility(hwnd);
     ClosePluginSecurityDialog();
     StopNotificationSound();

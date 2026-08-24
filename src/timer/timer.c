@@ -12,6 +12,7 @@
 #include "drawing.h"
 #include "menu_preview.h"
 #include "utils/time_parser.h"
+#include "statistics/statistics.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -253,6 +254,7 @@ void TogglePauseTimer(void) {
     if (CLOCK_IS_PAUSED && !was_paused) {
         g_pause_start_time = now;
         PauseTimerMilliseconds();
+        Statistics_OnPause();
     } else if (!CLOCK_IS_PAUSED && was_paused) {
         if (g_pause_start_time > 0) {
             int64_t pause_duration = now - g_pause_start_time;
@@ -262,5 +264,6 @@ void TogglePauseTimer(void) {
         }
         InitializeHighPrecisionTimer();
         ResetMillisecondAccumulator();
+        Statistics_OnResume();
     }
 }

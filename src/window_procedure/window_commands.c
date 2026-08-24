@@ -4,6 +4,7 @@
  */
 
 #include "window_commands_internal.h"
+#include "statistics/statistics.h"
 
 static BOOL RemoveRecentFileAtIndex(int index) {
     int count = g_AppConfig.recent_files.count;
@@ -112,6 +113,23 @@ typedef struct {
 BOOL DispatchRangeCommand(HWND hwnd, UINT cmd, WPARAM wp, LPARAM lp) {
     (void)wp;
     (void)lp;
+    if (cmd == CLOCK_IDM_STATISTICS) {
+        Statistics_ShowWindow(hwnd);
+        return TRUE;
+    }
+    if (cmd == CLOCK_IDM_CATEGORY_MANAGE) {
+        Statistics_ShowCategoryManager(hwnd);
+        return TRUE;
+    }
+    if (cmd >= CLOCK_IDM_CATEGORY_BASE && cmd <= CLOCK_IDM_CATEGORY_END) {
+        StatisticsCategory categories[STATISTICS_MAX_CATEGORIES];
+        int count = Statistics_GetCategories(categories, _countof(categories));
+        int index = (int)(cmd - CLOCK_IDM_CATEGORY_BASE);
+        if (index >= 0 && index < count) {
+            Statistics_SelectCategory(categories[index].id);
+        }
+        return TRUE;
+    }
     if (HandleAnimationMenuCommand(hwnd, cmd)) return TRUE;
     if (cmd == CLOCK_IDM_ANIM_SPEED_ORIGINAL) {
         CmdAnimationSpeed(hwnd, ANIMATION_SPEED_ORIGINAL); return TRUE;

@@ -35,6 +35,7 @@
 #include "tray/tray.h"
 #include "window_procedure/window_message_handlers.h"
 #include "dialog/dialog_font_picker.h"
+#include "statistics/statistics.h"
 
 /* External dependencies needed for menu display logic */
 extern char CLOCK_TEXT_COLOR[COLOR_HEX_BUFFER];
@@ -227,6 +228,38 @@ void ShowContextMenu(HWND hwnd, const POINT* anchor) {
 
     /* Build Pomodoro submenu using dedicated module */
     BuildPomodoroMenu(hMenu);
+
+    HMENU categoryMenu = CreatePopupMenu();
+    if (categoryMenu) {
+        StatisticsCategory categories[STATISTICS_MAX_CATEGORIES];
+        StatisticsCategory selectedCategory;
+        int categoryCount = Statistics_GetCategories(
+            categories, _countof(categories));
+        Statistics_GetSelectedCategory(&selectedCategory);
+        for (int i = 0; i < categoryCount; ++i) {
+            wchar_t name[STATISTICS_CATEGORY_NAME_MAX] = {0};
+            MultiByteToWideChar(CP_UTF8, 0, categories[i].name, -1,
+                                name, _countof(name));
+            if (strcmp(categories[i].id, "general") == 0) {
+                wcscpy_s(name, _countof(name),
+                         GetLocalizedString(L"通用", L"General"));
+            }
+            UINT flags = MF_STRING;
+            if (strcmp(categories[i].id, selectedCategory.id) == 0) {
+                flags |= MF_CHECKED;
+            }
+            if (!categories[i].enabled) flags |= MF_GRAYED;
+            AppendMenuW(categoryMenu, flags,
+                        CLOCK_IDM_CATEGORY_BASE + i, name);
+        }
+        AppendMenuW(categoryMenu, MF_SEPARATOR, 0, NULL);
+        AppendMenuW(categoryMenu, MF_STRING, CLOCK_IDM_CATEGORY_MANAGE,
+                    GetLocalizedString(L"管理分类...", L"Manage Categories..."));
+        AppendMenuW(hMenu, MF_POPUP, (UINT_PTR)categoryMenu,
+                    GetLocalizedString(L"专注分类", L"Focus Category"));
+    }
+    AppendMenuW(hMenu, MF_STRING, CLOCK_IDM_STATISTICS,
+                GetLocalizedString(L"统计", L"Statistics"));
     
 
     AppendMenuW(hMenu, MF_STRING | (CLOCK_COUNT_UP ? MF_CHECKED : MF_UNCHECKED),

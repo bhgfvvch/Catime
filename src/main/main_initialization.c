@@ -13,6 +13,7 @@
 #include "plugin/plugin_data.h"
 #include "plugin/plugin_manager.h"
 #include "shortcut_checker.h"
+#include "statistics/statistics.h"
 #include "timer/main_timer.h"
 #include "timer/timer.h"
 #include "timer/timer_events.h"
@@ -202,6 +203,9 @@ BOOL SetupMainWindow(HINSTANCE hInstance, HWND hwnd, int nCmdShow) {
     UNREFERENCED_PARAMETER(hInstance);
     UNREFERENCED_PARAMETER(nCmdShow);
     InitializeAsyncCaches(hwnd);
+    if (!Statistics_Initialize()) {
+        LOG_WARNING("Statistics initialization failed; timer remains available");
+    }
     if (!TaskbarMonitor_Initialize(hInstance, hwnd)) {
         LOG_WARNING("Taskbar monitor initialization failed");
     }

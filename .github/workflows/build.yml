@@ -795,6 +795,24 @@ jobs:
         shell: pwsh
         run: |
           ./.github/scripts/ci/build_mingw_i686.ps1
+          if (-not (Test-Path -LiteralPath "build/catime.exe" -PathType Leaf)) {
+            throw "catime.exe was not produced"
+          }
+
+      - name: Run statistics tests
+        shell: pwsh
+        run: |
+          ctest --test-dir build --output-on-failure -R "^statistics_"
+
+      - name: Run full CTest suite
+        shell: pwsh
+        run: |
+          ctest --test-dir build --output-on-failure
+
+      - name: Confirm Win32 smoke result
+        shell: pwsh
+        run: |
+          Write-Host "Win32 smoke test completed by build_mingw_i686.ps1"
           New-Item -ItemType Directory -Path "output" -Force | Out-Null
           Copy-Item -LiteralPath "build/catime.exe" -Destination "output/catime.exe"
 

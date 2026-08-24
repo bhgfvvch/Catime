@@ -13,6 +13,7 @@
 #include "tray/tray_theme_state.h"
 #include "taskbar_monitor.h"
 #include "window.h"
+#include "statistics/statistics.h"
 
 #define THEME_ICON_RECHECK_TIMER_ID 42432u
 
@@ -100,6 +101,7 @@ LRESULT HandleThemeChanged(HWND hwnd, WPARAM wp, LPARAM lp) {
 LRESULT HandleQueryEndSession(HWND hwnd, WPARAM wp, LPARAM lp) {
     (void)wp;
     (void)lp;
+    Statistics_OnFocusStepCancelled();
     CancelScheduledConfigSave(hwnd);
     if (CLOCK_EDIT_MODE) {
         EndEditMode(hwnd);

@@ -19,6 +19,7 @@
 #include "timer/timer.h"
 #include "tray/tray_animation_core.h"
 #include "async_update_checker.h"
+#include "statistics/statistics.h"
 #include "drawing/drawing_render.h"
 #include "../resource/resource.h"
 
@@ -63,6 +64,7 @@ BOOL HandleWindowCreate(HWND hwnd) {
  * @param hwnd Window handle being destroyed
  */
 void HandleWindowDestroy(HWND hwnd) {
+    Statistics_Shutdown();
     SaveWindowSettings(hwnd);
     CancelScheduledConfigSave(hwnd);
     

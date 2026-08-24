@@ -7,6 +7,7 @@
 #include <wchar.h>
 
 #include "timer_events_internal.h"
+#include "statistics/statistics.h"
 
 BOOL TimerEvents_AdvancePomodoroState(void) {
     if (pomodoro_initial_times_count == 0) {
@@ -105,6 +106,9 @@ BOOL TimerEvents_HandlePomodoroCompletion(HWND hwnd) {
 
     int stepInCycle = completedIndex + 1;
     int currentCycle = complete_pomodoro_cycles + 1;
+    if (Pomodoro_GetStepKind(completedIndex) == POMODORO_STEP_FOCUS) {
+        Statistics_OnFocusStepCompleted();
+    }
     BuildCompletionMessage(completionMsg, _countof(completionMsg),
                            completedIndex, timesCount, loopCount,
                            currentCycle, stepInCycle);
@@ -139,6 +143,12 @@ BOOL TimerEvents_HandlePomodoroCompletion(HWND hwnd) {
 
     InitializeHighPrecisionTimer();
     TimerEvents_ResetMillisecondAccumulator();
+    if (Pomodoro_GetStepKind(current_pomodoro_time_index) ==
+        POMODORO_STEP_FOCUS) {
+        Statistics_OnFocusStepStarted(nextDurationSec,
+                                      complete_pomodoro_cycles + 1,
+                                      current_pomodoro_time_index + 1);
+    }
     InvalidateRect(hwnd, NULL, TRUE);
     return TRUE;
 }

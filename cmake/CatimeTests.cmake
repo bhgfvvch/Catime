@@ -12,6 +12,72 @@ target_include_directories(window_placement_tests PRIVATE
 )
 add_test(NAME window_placement COMMAND window_placement_tests)
 
+add_executable(statistics_core_tests
+    tests/statistics_core_tests.c
+    src/statistics/statistics_state.c
+    src/statistics/statistics_date.c
+    src/statistics/statistics_aggregate.c
+    src/statistics/statistics_json.c
+    src/statistics/statistics_step.c
+    src/statistics/statistics_navigation.c
+)
+target_include_directories(statistics_core_tests PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/statistics"
+)
+target_link_libraries(statistics_core_tests PRIVATE user32)
+add_test(NAME statistics_core COMMAND statistics_core_tests)
+
+add_executable(statistics_category_tests
+    tests/statistics_category_tests.c
+    src/statistics/statistics_category.c
+    src/statistics/statistics_json.c
+    src/color/color_parser.c
+    src/color/color_conversion.c
+    src/utils/string_safe.c
+)
+target_include_directories(statistics_category_tests PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/statistics"
+)
+target_link_libraries(statistics_category_tests PRIVATE user32)
+if(MSVC)
+    target_compile_definitions(statistics_category_tests PRIVATE
+        strcasecmp=_stricmp
+    )
+endif()
+add_test(NAME statistics_category COMMAND statistics_category_tests)
+
+add_executable(statistics_storage_tests
+    tests/statistics_storage_tests.c
+    src/statistics/statistics_storage.c
+    src/statistics/statistics_pending.c
+    src/statistics/statistics_json.c
+)
+target_include_directories(statistics_storage_tests PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/statistics"
+)
+target_link_libraries(statistics_storage_tests PRIVATE shell32 user32)
+add_test(NAME statistics_storage COMMAND statistics_storage_tests)
+
+add_executable(statistics_reliability_tests
+    tests/statistics_reliability_tests.c
+    src/statistics/statistics_state.c
+    src/statistics/statistics_step.c
+)
+target_include_directories(statistics_reliability_tests PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/statistics"
+)
+target_link_libraries(statistics_reliability_tests PRIVATE user32)
+add_test(NAME statistics_reliability COMMAND statistics_reliability_tests)
+if(CATIME_NODE_EXECUTABLE)
+    add_test(NAME statistics_i18n
+        COMMAND "${CATIME_NODE_EXECUTABLE}"
+                "${CMAKE_CURRENT_SOURCE_DIR}/tests/statistics_i18n_tests.js")
+endif()
+
 add_executable(startup_policy_tests
     tests/startup_policy_tests.c
     src/startup_policy.c
@@ -311,6 +377,10 @@ target_link_libraries(tray_percent_font_tests PRIVATE gdi32 user32)
 add_test(NAME tray_percent_font COMMAND tray_percent_font_tests)
 
 set(_catime_test_targets
+    statistics_core_tests
+    statistics_category_tests
+    statistics_storage_tests
+    statistics_reliability_tests
     window_placement_tests
     startup_policy_tests
     startup_shortcut_tests
