@@ -16,6 +16,17 @@ set(CATIME_VERSION_MAJOR "${CMAKE_MATCH_1}")
 set(CATIME_VERSION_MINOR "${CMAKE_MATCH_2}")
 set(CATIME_VERSION_PATCH "${CMAKE_MATCH_3}")
 set(CATIME_VERSION_BUILD 0)
+file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/generated")
+set(CATIME_VERSION_NUMERIC_HEADER
+    "${CMAKE_BINARY_DIR}/generated/catime_version_numeric.h")
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/resource/catime_version_numeric.h.in"
+    "${CATIME_VERSION_NUMERIC_HEADER}"
+    @ONLY
+)
+if(NOT EXISTS "${CATIME_VERSION_NUMERIC_HEADER}")
+    message(FATAL_ERROR "Version header was not generated at configure time")
+endif()
 project(Catime VERSION
     "${CATIME_VERSION_MAJOR}.${CATIME_VERSION_MINOR}.${CATIME_VERSION_PATCH}"
     LANGUAGES C RC
@@ -23,12 +34,6 @@ project(Catime VERSION
 include(cmake/CatimePureC.cmake)
 include(cmake/CatimeSourceLayout.cmake)
 include(cmake/CatimeInteractionSafety.cmake)
-
-configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/resource/catime_version_numeric.h.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/generated/catime_version_numeric.h"
-    @ONLY
-)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -84,7 +89,8 @@ endif()
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.c")
 include(cmake/CatimeResources.cmake)
 
-add_executable(catime ${SOURCES} ${HEADERS} ${RESOURCE_FILES})
+add_executable(catime ${SOURCES} ${HEADERS} ${RESOURCE_FILES}
+    "${CATIME_VERSION_NUMERIC_HEADER}")
 add_dependencies(catime catime_interaction_safety_check)
 include(cmake/CatimeTests.cmake)
 include(cmake/CatimeTarget.cmake)

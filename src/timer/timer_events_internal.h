@@ -82,7 +82,6 @@ BOOL TimerEvents_HandleForceRedraw(HWND hwnd);
 
 /* Pomodoro and completion helpers. */
 BOOL TimerEvents_AdvancePomodoroState(void);
-BOOL TimerEvents_IsActivePomodoroTimer(void);
 void TimerEvents_FormatPomodoroTime(int seconds, wchar_t* buffer,
                                     size_t bufferSize);
 BOOL TimerEvents_HandlePomodoroCompletion(HWND hwnd);

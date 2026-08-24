@@ -89,7 +89,7 @@ fail:
     return NULL;
 }
 
-static char* ReadFile(const char* path) {
+static char* Statistics_ReadTextFile(const char* path) {
     wchar_t wide[MAX_PATH];
     FILE* file = NULL;
     if (!Statistics_Utf8PathToWide(path, wide, MAX_PATH) ||
@@ -121,7 +121,7 @@ BOOL Statistics_SavePendingSession(const StatisticsSession* session) {
 BOOL Statistics_LoadPendingSession(StatisticsSession* session) {
     char path[MAX_PATH];
     BuildPath(path, sizeof(path));
-    char* json = ReadFile(path);
+    char* json = Statistics_ReadTextFile(path);
     if (!json) return FALSE;
     BOOL result = Statistics_ParseSessionLine(json, session);
     free(json);

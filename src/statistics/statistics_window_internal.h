@@ -26,5 +26,8 @@ void StatisticsWindow_DrawDonut(HDC dc, const RECT* rect,
 void StatisticsWindow_DrawBars(HDC dc, const RECT* rect,
                                const StatisticsSummary* summary,
                                const DialogModernPalette* palette);
+int StatisticsCharts_DaySlot(StatisticsRangeKind range,
+                             const StatisticsDayValue* day, int dayIndex,
+                             int slotCount);
 
 #endif

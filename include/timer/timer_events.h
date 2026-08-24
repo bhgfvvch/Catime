@@ -64,6 +64,9 @@ void InitializePomodoro(void);
  */
 void ResetPomodoroState(void);
 
+/** Return TRUE while the current timer interval belongs to Pomodoro. */
+BOOL TimerEvents_IsActivePomodoroTimer(void);
+
 /**
  * @brief Arm a one-time system timeout action selected through trusted UI.
  *

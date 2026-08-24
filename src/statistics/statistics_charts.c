@@ -103,15 +103,22 @@ void StatisticsWindow_DrawBars(HDC dc, const RECT* rect,
                                const StatisticsSummary* summary,
                                const DialogModernPalette* palette) {
     if (summary->day_count <= 0) return;
+    int dayCount = summary->day_count;
+    if (dayCount > STATISTICS_MAX_DAYS) dayCount = STATISTICS_MAX_DAYS;
+    int categoryCount = summary->category_count;
+    if (categoryCount < 0) categoryCount = 0;
+    if (categoryCount > STATISTICS_MAX_CATEGORIES)
+        categoryCount = STATISTICS_MAX_CATEGORIES;
     int count = g_statisticsWindow.range == STATS_RANGE_YEAR
-        ? 12 : summary->day_count;
+        ? 12 : dayCount;
     int64_t totals[STATISTICS_MAX_DAYS] = {0};
     int64_t stacks[STATISTICS_MAX_DAYS][STATISTICS_MAX_CATEGORIES] = {{0}};
-    for (int day = 0; day < summary->day_count; ++day) {
-        int slotIndex = g_statisticsWindow.range == STATS_RANGE_YEAR
-            ? summary->days[day].date.wMonth - 1 : day;
+    for (int day = 0; day < dayCount; ++day) {
+        int slotIndex = StatisticsCharts_DaySlot(g_statisticsWindow.range,
+            &summary->days[day], day, count);
+        if (slotIndex < 0) continue;
         totals[slotIndex] += summary->days[day].focused_seconds;
-        for (int category = 0; category < summary->category_count; ++category) {
+        for (int category = 0; category < categoryCount; ++category) {
             stacks[slotIndex][category] +=
                 summary->day_category_seconds[day][category];
         }
@@ -132,7 +139,7 @@ void StatisticsWindow_DrawBars(HDC dc, const RECT* rect,
     for (int day = 0; day < count; ++day) {
         int x = rect->left + day * slot + (slot - barWidth) / 2;
         int bottom = chartBottom;
-        for (int category = 0; category < summary->category_count; ++category) {
+        for (int category = 0; category < categoryCount; ++category) {
             int64_t seconds = stacks[day][category];
             if (seconds <= 0) continue;
             int height = (int)(seconds * (chartBottom - rect->top) / maximum);

@@ -147,6 +147,7 @@ set(RESOURCE_RC_DEPENDENCIES
     "${CMAKE_CURRENT_SOURCE_DIR}/resource/resource.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/resource/app.manifest"
     "${CMAKE_CURRENT_SOURCE_DIR}/asset/icon/catime.ico"
+    "${CATIME_VERSION_NUMERIC_HEADER}"
 )
 if(NOT CATIME_COMPRESS_EMBEDDED_ASSETS)
     list(APPEND RESOURCE_RC_DEPENDENCIES ${FONT_RESOURCE_FILES})
@@ -155,5 +156,8 @@ set_source_files_properties(resource/resource.rc PROPERTIES
     OBJECT_DEPENDS "${RESOURCE_RC_DEPENDENCIES}"
 )
 set_source_files_properties(resource/catime.rc PROPERTIES
-    OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/resource/resource.h"
+    OBJECT_DEPENDS
+        "${CMAKE_CURRENT_SOURCE_DIR}/resource/resource.h;${CATIME_VERSION_NUMERIC_HEADER}"
 )
+set_property(SOURCE "${CATIME_LANGUAGE_RC}" APPEND PROPERTY
+    OBJECT_DEPENDS "${CATIME_VERSION_NUMERIC_HEADER}")

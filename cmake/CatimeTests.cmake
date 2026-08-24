@@ -72,6 +72,17 @@ target_include_directories(statistics_reliability_tests PRIVATE
 )
 target_link_libraries(statistics_reliability_tests PRIVATE user32)
 add_test(NAME statistics_reliability COMMAND statistics_reliability_tests)
+add_executable(statistics_charts_tests
+    tests/statistics_charts_tests.c
+    src/statistics/statistics_charts_logic.c
+)
+target_include_directories(statistics_charts_tests PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/statistics"
+)
+target_link_libraries(statistics_charts_tests PRIVATE user32)
+add_test(NAME statistics_charts COMMAND statistics_charts_tests)
 if(CATIME_NODE_EXECUTABLE)
     add_test(NAME statistics_i18n
         COMMAND "${CATIME_NODE_EXECUTABLE}"
@@ -381,6 +392,7 @@ set(_catime_test_targets
     statistics_category_tests
     statistics_storage_tests
     statistics_reliability_tests
+    statistics_charts_tests
     window_placement_tests
     startup_policy_tests
     startup_shortcut_tests
