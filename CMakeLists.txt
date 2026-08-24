@@ -31,6 +31,13 @@ project(Catime VERSION
     "${CATIME_VERSION_MAJOR}.${CATIME_VERSION_MINOR}.${CATIME_VERSION_PATCH}"
     LANGUAGES C RC
 )
+
+# Keep a named build dependency for the configure-time generated version
+# header so every target that includes resource_app_ids.h is ordered after it.
+add_custom_target(catime_version_header
+    DEPENDS "${CATIME_VERSION_NUMERIC_HEADER}"
+)
+
 include(cmake/CatimePureC.cmake)
 include(cmake/CatimeSourceLayout.cmake)
 include(cmake/CatimeInteractionSafety.cmake)
@@ -91,7 +98,7 @@ include(cmake/CatimeResources.cmake)
 
 add_executable(catime ${SOURCES} ${HEADERS} ${RESOURCE_FILES}
     "${CATIME_VERSION_NUMERIC_HEADER}")
-add_dependencies(catime catime_interaction_safety_check)
+add_dependencies(catime catime_version_header catime_interaction_safety_check)
 include(cmake/CatimeTests.cmake)
 include(cmake/CatimeTarget.cmake)
 include(cmake/CatimeCompiler.cmake)

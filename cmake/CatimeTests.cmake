@@ -24,7 +24,9 @@ add_executable(statistics_core_tests
 target_include_directories(statistics_core_tests PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/statistics"
+    "${CMAKE_CURRENT_BINARY_DIR}/generated"
 )
+add_dependencies(statistics_core_tests catime_version_header)
 target_link_libraries(statistics_core_tests PRIVATE user32)
 add_test(NAME statistics_core COMMAND statistics_core_tests)
 
@@ -39,7 +41,9 @@ add_executable(statistics_category_tests
 target_include_directories(statistics_category_tests PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/statistics"
+    "${CMAKE_CURRENT_BINARY_DIR}/generated"
 )
+add_dependencies(statistics_category_tests catime_version_header)
 target_link_libraries(statistics_category_tests PRIVATE user32)
 if(MSVC)
     target_compile_definitions(statistics_category_tests PRIVATE
@@ -57,7 +61,9 @@ add_executable(statistics_storage_tests
 target_include_directories(statistics_storage_tests PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/statistics"
+    "${CMAKE_CURRENT_BINARY_DIR}/generated"
 )
+add_dependencies(statistics_storage_tests catime_version_header)
 target_link_libraries(statistics_storage_tests PRIVATE shell32 user32)
 add_test(NAME statistics_storage COMMAND statistics_storage_tests)
 
@@ -69,7 +75,9 @@ add_executable(statistics_reliability_tests
 target_include_directories(statistics_reliability_tests PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/statistics"
+    "${CMAKE_CURRENT_BINARY_DIR}/generated"
 )
+add_dependencies(statistics_reliability_tests catime_version_header)
 target_link_libraries(statistics_reliability_tests PRIVATE user32)
 add_test(NAME statistics_reliability COMMAND statistics_reliability_tests)
 add_executable(statistics_charts_tests
@@ -80,7 +88,9 @@ target_include_directories(statistics_charts_tests PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/statistics"
+    "${CMAKE_CURRENT_BINARY_DIR}/generated"
 )
+add_dependencies(statistics_charts_tests catime_version_header)
 target_link_libraries(statistics_charts_tests PRIVATE user32)
 add_test(NAME statistics_charts COMMAND statistics_charts_tests)
 if(CATIME_NODE_EXECUTABLE)
